@@ -1,4 +1,6 @@
-{% for name, exchange in salt["pillar.get"]("rabbitmq:exchanges", {}).items() %}
+{% from "rabbitmq/map.jinja" import rabbitmq with context %}
+
+{%- for name, exchange in rabbitmq.get("exchanges", {}).items() %}
 rabbitmq_exchange_{{ name }}:
   rabbitmq_exchange.present:
     - name: {{ exchange.name }}
@@ -8,5 +10,5 @@ rabbitmq_exchange_{{ name }}:
     - auto_delete: {{ exchange.auto_delete }}
     - internal: {{ exchange.internal }}
     - require:
-      - service: rabbitmq-server
+      - service: rabbitmq_service
 {% endfor %}

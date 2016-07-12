@@ -1,4 +1,6 @@
-{% for name, binding in salt["pillar.get"]("rabbitmq:bindings", {}).items() %}
+{% from "rabbitmq/map.jinja" import rabbitmq with context %}
+
+{%- for name, binding in rabbitmq.get("bindings", {}).items() %}
 rabbitmq_binding_{{ name }}:
   rabbitmq_binding.present:
     - source: {{ binding.source }}
@@ -7,5 +9,5 @@ rabbitmq_binding_{{ name }}:
     - destination_type: {{ binding.destination_type }}
     - routing_key: {{ binding.routing_key }}
     - require:
-      - service: rabbitmq-server
+      - service: rabbitmq_service
 {% endfor %}

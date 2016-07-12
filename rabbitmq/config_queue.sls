@@ -1,4 +1,6 @@
-{% for name, queue in salt["pillar.get"]("rabbitmq:queues", {}).items() %}
+{% from "rabbitmq/map.jinja" import rabbitmq with context %}
+
+{%- for name, queue in rabbitmq.get("queues", {}).items() %}
 rabbitmq_queue_{{ name }}:
   rabbitmq_queue.present:
     - name: {{ queue.name }}
@@ -6,5 +8,5 @@ rabbitmq_queue_{{ name }}:
     - durable: {{ queue.durable }}
     - auto_delete: {{ queue.auto_delete }}
     - require:
-      - service: rabbitmq-server
+      - service: rabbitmq_service
 {% endfor %}
