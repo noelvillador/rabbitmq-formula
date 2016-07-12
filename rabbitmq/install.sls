@@ -1,12 +1,14 @@
 {% from "rabbitmq/package-map.jinja" import pkgs with context %}
-
+{% from "rabbitmq/package-map.jinja" import rabbitmq with context %}
 {% set module_list = salt['sys.list_modules']() %}
+
 {% if 'rabbitmqadmin' in module_list %}
 include:
   - .config_bindings
   - .config_queue
   - .config_exchange
-{% endif %}
+{%- endif %}
+
 
 rabbitmq-server:
   pkg.installed:
@@ -14,6 +16,16 @@ rabbitmq-server:
     {%- if 'version' in salt['pillar.get']('rabbitmq', {}) %}
     - version: {{ salt['pillar.get']('rabbitmq:version') }}
     {%- endif %}
+    {%- if rabbitmq.get('use_http_source', False) %}
+    - sources:
+      - rabbitmq-server: {{ rabbitmq.source_url }}
+    {%- endif %}
+{%- if grains['os'] == 'CentOS' %}
+    - require:
+      - sls: epel
+{%- endif %}
+
+
 
   service:
     - running
@@ -37,4 +49,3 @@ rabbitmq_binary_tool_plugins:
     - require:
       - pkg: rabbitmq-server
       - file: rabbitmq_binary_tool_env
-

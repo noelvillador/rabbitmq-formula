@@ -1,3 +1,6 @@
+{% import_yaml "rabbitmq/defaults.yaml" as default %}
+
+
 {% set package_table = {
     'Debian': {'rabbitmq-server': 'rabbitmq-server'},
     'Ubuntu': {'rabbitmq-server': 'rabbitmq-server'},
@@ -11,4 +14,28 @@
     {% set pkgs = pillar['package_table'] %}
 {% elif grains['os'] in package_table %}
     {% set pkgs = package_table[grains['os']] %}
+{% endif %}
+
+
+{% set rabbitmq = salt['pillar.get']('rabbitmq', default=default.rabbitmq, merge=True) %}
+{% if rabbitmq.get('version', None) %}
+
+{% set package_ext_table = {
+'Debian': '_all.deb',
+'Ubuntu': '_all.deb',
+'CentOS': '.noarch.rpm',
+'Fedora': '.noarch.rpm',
+'RedHat': '.noarch.rpm',
+} %}
+
+{% set package_ext = package_ext_table[grains['os']] %}
+
+
+{% set maj_version =  rabbitmq.version.split('-')[0] %}
+{% set source_base = ['https://www.rabbitmq.com/releases/rabbitmq-server/v', maj_version]|join %}
+{% set source_file = ['rabbitmq-server-', rabbitmq.version, package_ext]|join %}
+{% set source_url = [source_base, source_file]|join('/') %}
+
+{% do rabbitmq.update({'source_url':source_url}) %}
+
 {% endif %}
