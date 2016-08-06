@@ -3,5 +3,5 @@
     - user: root
     - group: root
     - mode: 0644
-    - source: salt://rabbitmq/file/rabbitmq.template.template
+    - source: salt://rabbitmq/file/rabbitmq.template
     - template: jinja
