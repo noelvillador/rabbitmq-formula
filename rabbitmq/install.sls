@@ -33,3 +33,11 @@ rabbitmq_binary_tool_plugins:
     - target: /usr/lib/rabbitmq/bin/rabbitmq-plugins
     - require:
       - pkg: rabbitmq_pkg
+
+/etc/rabbitmq/rabbitmq.config:
+  file.managed:
+    - user: root
+    - group: root
+    - mode: 0644
+    - source: salt://rabbitmq/file/rabbitmq.template.template
+    - template: jinja
