@@ -1,3 +1,5 @@
+{% from 'rabbitmq/map.jinja' import rabbitmq with context %}
+
 rabbitmq_service:
   service.running:
     - name: rabbitmq-server
