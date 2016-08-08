@@ -3,7 +3,6 @@ include:
   - epel
 {% endif %}
   - rabbitmq.install
-  - rabbitmq.configure
   - rabbitmq.service
   - rabbitmq.config
   - rabbitmq.config_vhost
