@@ -1,7 +1,5 @@
 {% from "rabbitmq/map.jinja" import rabbitmq with context %}
 
-
-
 rabbitmq_pkg:
   pkg.installed:
     - name: 'rabbitmq-server'

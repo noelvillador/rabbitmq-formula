@@ -6,11 +6,11 @@ rabbitmq_service:
     - enable: True
     - watch:
       - sls: rabbitmq.install
-      - file: /etc/rabbitmq/rabbitmq.config
 
 /etc/rabbitmq:
   file.directory
 
+{% if rabbitmq.cluster_hosts %}
 /etc/rabbitmq/rabbitmq.config:
   file.managed:
     - template: jinja
@@ -18,7 +18,6 @@ rabbitmq_service:
     - require:
       - file: /etc/rabbitmq
 
-{% if rabbitmq.cluster_hosts %}
 dead-rabbitmq-server:
   service.dead:
     - name: rabbitmq-server
@@ -34,5 +33,5 @@ dead-rabbitmq-server:
       # we have to stop rabbit before we change this cookie
       - service: dead-rabbitmq-server
     - watch_in:
-      - service: rabbitmq-server
+      - service: rabbitmq_service
 {% endif %}
