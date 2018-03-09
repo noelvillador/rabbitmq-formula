@@ -1,7 +1,4 @@
 include:
-{% if grains['os'] == 'CentOS' %}
-  - epel
-{% endif %}
   - rabbitmq.install
   - rabbitmq.service
   - rabbitmq.config
