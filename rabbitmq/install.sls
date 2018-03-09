@@ -10,10 +10,6 @@ rabbitmq_pkg:
     - sources:
       - rabbitmq-server: {{ rabbitmq.source_url }}
     {%- endif %}
-{%- if grains['os'] == 'CentOS' %}
-    - require:
-      - sls: epel
-{%- endif %}
 
 
 rabbitmq_binary_tool_env:
